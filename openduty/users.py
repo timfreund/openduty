@@ -32,10 +32,9 @@ def edit(request, id):
     try:
         user = User.objects.get(id = id)
         user_methods = UserNotificationMethod.objects.filter(user = user).order_by('position')
-
         return TemplateResponse(
             request, 'users/edit.html',
-            {'item': user, 'methods': UserNotificationMethod.methods, 'user_methods': user_methods, 'empty_user_method': UserNotificationMethod()}
+            {'item': user, 'admin': request.user.is_staff, 'methods': UserNotificationMethod.methods, 'user_methods': user_methods, 'empty_user_method': UserNotificationMethod()}
         )
     except User.DoesNotExist:
         raise Http404
@@ -48,10 +47,11 @@ def new(request):
 @require_http_methods(["POST"])
 def save(request):
     try:
-        user = User.objects.get(id = request.POST['id'])
+        user = User.objects.get(id=request.POST['id'])
     except User.DoesNotExist:
         user = User()
         user.is_active = True
+
 
     user.username = request.POST['username']
     user.email = request.POST['email']
@@ -59,6 +59,16 @@ def save(request):
         user.set_password(request.POST['password'])
 
     try:
+        if not (request.user == user or request.user.is_staff):
+            messages.error(request, 'Only admins are allowed to edit other users.')
+            raise ValueError
+        is_staff = request.POST.get('is_staff', False)
+        change_admin_status = user.is_staff == is_staff
+        if not (request.user.is_staff and change_admin_status is not None):
+            messages.error(request, 'Only admins are allowed to modify admin status.')
+            raise ValueError
+        if change_admin_status is not None:
+            user.is_staff = is_staff
         user.save()
         try:
             UserNotificationMethod.objects.filter(user=user).delete()
@@ -78,6 +88,7 @@ def save(request):
         else:
             profile = user.profile
 
+
         profile.phone_number = request.POST['phone_number']
         profile.pushover_user_key = request.POST['pushover_user_key']
         profile.pushover_app_key = request.POST['pushover_app_key']
@@ -90,10 +101,13 @@ def save(request):
         return HttpResponseRedirect(reverse('openduty.users.list'))
     except IntegrityError:
         messages.error(request, 'Username already exists.')
-        if int(request.POST['id']) > 0:
-            return HttpResponseRedirect(reverse('openduty.users.edit', None, [str(request.POST['id'])]))
-        else:
-            return HttpResponseRedirect(reverse('openduty.users.new'))
+    except ValueError:
+        pass
+
+    if int(request.POST['id']) > 0:
+        return HttpResponseRedirect(reverse('openduty.users.edit', None, [str(request.POST['id'])]))
+    else:
+        return HttpResponseRedirect(reverse('openduty.users.new'))
 
 @login_required()
 @require_http_methods(["POST"])

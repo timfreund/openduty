@@ -119,6 +119,14 @@ $( document ).ready(function() {
     <div class="form-group">
     <button id="add">Add new notification method</button>
     </div>
+    {% if admin %}
+        <div class="form-group">
+        <label for="admin" class="col-sm-2 control-label">Administrator</label>
+        <div class="col-sm-1">
+            <input type="checkbox" class="form-control alert-danger" name="is_staff" id="is_staff" {% if item.is_staff  %} checked {% endif %}>
+        </div>
+    </div>
+    {% endif %}
 
 
     <div class="form-group">
