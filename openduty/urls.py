@@ -103,7 +103,8 @@ urlpatterns = patterns('',
         name='incident_list'),
    url(r'^twilio/(\d+)/(\d+)$', 'openduty.call_handler.read_notification'),
    url(r'^twilio/handle/(\d+)/(\d+)$', 'openduty.call_handler.handle_key'),
-
+   #DASHBOARD
+   url(r'^incident_dashboard$', 'openduty.dashboard.list', name="incident_dash"),
 
 )
 

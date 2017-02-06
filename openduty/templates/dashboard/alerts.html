@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- jquery -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+
+	<!-- pnotify -->
+	<script type="text/javascript" src="/static/js/pnotify.custom.min.js"></script>
+	<link href="/static/css/pnotify.custom.min.css" rel="stylesheet" type="text/css">
+
+	<!-- flipclock -->
+	<script type="text/javascript" src="/static/js/flipclock.min.js"></script>
+	<link href="/static/css/flipclock.css" rel="stylesheet" type="text/css">
+
+	<meta http-equiv="content-type" content="text/html; charset=utf8" />
+	<style>
+	body {
+		background: #222 no-repeat center center fixed;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		background-size: cover;
+		-o-background-size: cover;
+		padding-top: 60px;
+	}
+	</style>
+
+	<title>Alerts dashboard for {{LOFASZ}}</title>
+</head>
+<body>
+    <div class="clock" style="position: fixed; bottom: 0;"></div>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">Openduty</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+          <h1 style="
+    text-align: center;
+    font-size: 30px;
+    color: #9d9d9d;">Alerts dashboard for Service: ALL</h1>
+
+
+
+  <div id="alertbox" style="height: 80vh; position: relative; overflow: auto;">
+  </div>
+
+  {% if alerts %}
+  <script type="text/javascript">
+  var notices = [];
+  var stack = {"dir1": "right", "dir2": "down", "push": "top", "context": $("#alertbox")};
+  function messageBox(id, message, severity, date){
+  	
+  	var opts = {
+				title: message,
+				text: date,
+				addclass: "stack-topleft",
+				stack: stack,
+				hide: false,
+				buttons: {
+					sticker: false
+				}
+			};
+			switch(severity) {
+				case '-1':
+					opts.type='info';
+					opts.icon='glyphicon glyphicon-thumbs-up';
+					break;
+				case '0':
+				case '1':
+					opts.type='info';
+					break;
+				case '2':
+				case '3':
+					opts.type='regular';
+					break;
+				case '4':
+				case '5':
+				default:
+					opts.type='error';
+			}
+			notice = new PNotify(opts);
+			notice.get().click(function(){
+					$.get( "/acknowledge/" + id);
+				});
+			notices[id] = notice;
+  	return notice;
+  }
+  
+  $( document ).ready(function() {
+  {% for alert in alerts %}
+    messageBox('ALERTITTIE', 'MSG', 'error', '2012-03-12');
+  {% endfor %}
+  });
+  </script>
+  {% endif %}
+
+
+
+</div><!-- /.container -->
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+	var clock;
+	clock = $('.clock').FlipClock({
+	    clockFace: 'TwentyFourHourClock',
+	    showSeconds: false
+	});
+    });
+</script>
+
+
+<script type="text/javascript">
+	var pusher = new Pusher('{{key}}');
+	var channel = pusher.subscribe('alerts-{{group}}');
+	channel.bind('new-alerts', function(data) {
+		if (data.type == 'recovery'){
+			notices[data.id].update({type: 'success', hide: 'true', icon: 'glyphicon glyphicon-ok'});
+		}
+		else if (data.type == 'ack'){
+			notices[data.id].update({type: 'info', icon: 'glyphicon glyphicon-thumbs-up'});
+		}
+		else {
+			messageBox(data.id, data.message, data.severity, data.date);
+		}
+	});
+</script>
+
+</body>
+</html>

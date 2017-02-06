@@ -6,17 +6,7 @@ TEMPLATE_DEBUG = True
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 import sys
-if 'test' not in sys.argv:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'openduty',
-            'USER': 'openduty',
-            'PASSWORD': 'dutyfree',
-            'HOST': '127.0.0.1',
-            'PORT': '3306'
-        }
-    }
+
 
 BASE_URL = "http://localhost:8000"
 
@@ -55,4 +45,3 @@ AUTHENTICATION_BACKENDS = (
 MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + (
     'openduty.middleware.basicauthmiddleware.BasicAuthMiddleware',
 )
-

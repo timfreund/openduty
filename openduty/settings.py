@@ -141,6 +141,10 @@ CACHES = {
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
 DATABASES = {
+'default': {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': 'test_sqlite.db',
+}
 }
 TWILIO_ACCOUNT_SID = TWILIO_SETTINGS.get("SID", "disabled")
 TWILIO_AUTH_TOKEN = TWILIO_SETTINGS.get("token", "disabled")
