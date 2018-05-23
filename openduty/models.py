@@ -252,6 +252,6 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 signals.post_save.connect(create_user_profile, sender=User)
 
-signals.post_syncdb.disconnect(
+signals.post_migrate.disconnect(
     sender=auth_models,
     dispatch_uid='django.contrib.auth.management.create_superuser')
