@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import uuidfield.fields
-
 
 class Migration(migrations.Migration):
 
@@ -43,15 +41,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='IncidentSilenced',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('silenced', models.BooleanField(default=False)),
-                ('silenced_until', models.DateTimeField()),
-                ('incident', models.ForeignKey(to='openduty.Incident')),
-            ],
-        ),
-        migrations.CreateModel(
             name='SchedulePolicy',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -82,25 +71,15 @@ class Migration(migrations.Migration):
             name='Service',
             fields=[
                 ('name', models.CharField(unique=True, max_length=80)),
-                ('id', uuidfield.fields.UUIDField(primary_key=True, serialize=False, editable=False, max_length=32, blank=True, unique=True)),
+                ('id', models.UUIDField(primary_key=True, serialize=False, editable=False, max_length=32, blank=True, unique=True)),
                 ('retry', models.IntegerField(null=True, blank=True)),
                 ('escalate_after', models.IntegerField(null=True, blank=True)),
-                ('notifications_disabled', models.BooleanField(default=False)),
                 ('policy', models.ForeignKey(blank=True, to='openduty.SchedulePolicy', null=True)),
             ],
             options={
                 'verbose_name': 'service',
                 'verbose_name_plural': 'service',
             },
-        ),
-        migrations.CreateModel(
-            name='ServiceSilenced',
-            fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('silenced', models.BooleanField(default=False)),
-                ('silenced_until', models.DateTimeField()),
-                ('service', models.ForeignKey(to='openduty.Service')),
-            ],
         ),
         migrations.CreateModel(
             name='ServiceTokens',
@@ -129,9 +108,6 @@ class Migration(migrations.Migration):
                 ('pushover_user_key', models.CharField(max_length=50)),
                 ('pushover_app_key', models.CharField(max_length=50)),
                 ('slack_room_name', models.CharField(max_length=50)),
-                ('prowl_api_key', models.CharField(max_length=50, blank=True)),
-                ('prowl_application', models.CharField(max_length=256, blank=True)),
-                ('prowl_url', models.CharField(max_length=512, blank=True)),
                 ('user', models.OneToOneField(related_name='profile', to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -154,11 +130,6 @@ class Migration(migrations.Migration):
             model_name='eventlog',
             name='service_key',
             field=models.ForeignKey(to='openduty.Service'),
-        ),
-        migrations.AddField(
-            model_name='eventlog',
-            name='user',
-            field=models.ForeignKey(related_name='users', default=None, blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
         migrations.AlterUniqueTogether(
             name='incident',
