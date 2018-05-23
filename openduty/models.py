@@ -8,7 +8,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.auth.models import User, Group
-from uuidfield import UUIDField
 from django.core.exceptions import ValidationError
 from schedule.models import Calendar
 from django.contrib.auth import models as auth_models
@@ -67,7 +66,7 @@ class Service(models.Model):
     Incidents are representations of a malfunction in the system.
     """
     name = models.CharField(max_length=80, unique=True)
-    id = UUIDField(primary_key=True, auto=True)
+    id = models.UUIDField(primary_key=True)
     retry = models.IntegerField(blank=True, null=True)
     policy = models.ForeignKey(SchedulePolicy, blank=True, null=True)
     escalate_after = models.IntegerField(blank=True, null=True)
