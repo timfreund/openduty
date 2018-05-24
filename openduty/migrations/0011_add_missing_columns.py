@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import django.db.models.deletion
-
+import uuid
 
 class Migration(migrations.Migration):
 
@@ -62,6 +62,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='service',
             name='id',
-            field=models.UUIDField(primary_key=True, serialize=False),
+            field=models.UUIDField(primary_key=True, serialize=False, editable=False, default=uuid.uuid4),
         ),
     ]
