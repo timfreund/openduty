@@ -8,14 +8,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField('userprofile', 'prowl_api_key', models.CharField(default='',
-                                                                             max_length=50,
+        migrations.AddField('userprofile', 'prowl_api_key', models.CharField(max_length=50,
                                                                              blank=True)),
-        migrations.AddField('userprofile', 'prowl_application', models.CharField(default='',
-                                                                                 max_length=256,
+        migrations.AddField('userprofile', 'prowl_application', models.CharField(max_length=256,
                                                                                  blank=True)),
-        migrations.AddField('userprofile', 'prowl_url', models.CharField(default='',
-                                                                         max_length=512,
+        migrations.AddField('userprofile', 'prowl_url', models.CharField(max_length=512,
                                                                          blank=True)),
     ]
 
