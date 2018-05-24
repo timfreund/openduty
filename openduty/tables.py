@@ -31,13 +31,20 @@ class IncidentTable(tables.Table):
     details = tables.Column(verbose_name="Details",attrs={"td": {"data-title": "Details"}})
     id = tables.Column(attrs={"td": {"data-title": "Id"}})
 
-    filters = (F('service_key','Service filter',
-                 values_list=[ (str(x), str(x.id)) for x in Service.objects.all()]),
-               F('event_type', 'Event',
-                 values_list=EventLog.ACTIONS),
-               F('incident_key', 'Incident Key',
-                 values_list= [(i, i) for i in Incident.objects.values_list('incident_key', flat=True).order_by('-occurred_at')[:500] ])
-              )
+    # TODO: Service.objects.all() causes problems during `./manage.py migrate` when configuring
+    # the system for the first time.  The service table does not exist, so this throws an exception.
+    #
+    # We should also configure the values_list on each page load rather than at start up.  This
+    # prevents new data from appearing in filters between webserver restarts.
+    #
+    # See: https://github.com/timfreund/openduty/issues/1
+    # filters = (F('service_key','Service filter',
+    #              values_list=[ (str(x), str(x.id)) for x in Service.objects.all()]),
+    #            F('event_type', 'Event',
+    #              values_list=EventLog.ACTIONS),
+    #            F('incident_key', 'Incident Key',
+    #              values_list= [(i, i) for i in Incident.objects.values_list('incident_key', flat=True).order_by('-occurred_at')[:500] ])
+    #           )
     tr_class = tables.Column(visible=False, empty_values=())
 
     def render_tr_class(self, record):
