@@ -2,7 +2,7 @@ import datetime
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
 from schedule.forms import EventForm
 from schedule.models import Calendar, Event
@@ -64,14 +64,14 @@ def create_or_edit_event(request, calendar_slug, event_id=None, next=None,
 
 
     next = get_next_url(request, next)
-    return render_to_response(template_name, {
+    return render(request, template_name, {
         "data": data,
         "calendar": calendar,
         "next":next,
         "users":users,
         "groups": groups,
         "form": form,
-    }, context_instance=RequestContext(request))
+    })
 
 @check_event_permissions
 def destroy_event(request, calendar_slug, event_id=None, next=None,

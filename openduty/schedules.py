@@ -2,7 +2,7 @@ __author__ = 'deathowl'
 
 from openduty import escalation_helper
 from urllib import quote
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
 from django.template.response import TemplateResponse
@@ -74,7 +74,7 @@ def details(request, calendar_slug,  periods=None):
                 period_objects[period.__name__.lower()] = period(event_list, date, None, local_timezone)
             else:
                 period_objects[period.__name__.lower()] = period(event_list, date, None, None, local_timezone)
-        return render_to_response('schedule/detail.html',
+        return render(request, 'schedule/detail.html',
          {
             'date': date,
             'periods': period_objects,
@@ -86,8 +86,8 @@ def details(request, calendar_slug,  periods=None):
             'current_date': timezone.now(),
 
             'here':quote(request.get_full_path()),
-        },context_instance=RequestContext(request),
-                                  )
+        })
+
     except Calendar.DoesNotExist:
         raise Http404
 
