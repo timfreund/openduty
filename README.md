@@ -73,6 +73,7 @@ virtualenv env --python python2.7
 pip install -r requirements.txt
 export DJANGO_SETTINGS_MODULE=openduty.settings_dev
 python manage.py migrate
+python manage.py createsuperuser
 python manage.py collectstatic
 python manage.py runserver
 ```
