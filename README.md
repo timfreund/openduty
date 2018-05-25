@@ -95,6 +95,61 @@ sudo systemctl start gunicorn
 sudo systemctl enable gunicorn
 
 ```
+# Running with docker and docker-compose
+
+When OpenDuty runs in a docker container with the `settings_docker.py`
+configuration it uses the following environment variables to configure
+itself:
+
+## Required Settings
+
+- BASE_URL
+- DATABASES_DEFAULT_NAME
+- DATABASES_DEFAULT_USER
+- DATABASES_DEFAULT_PASSWORD
+- DATABASES_DEFAULT_HOST
+- DATABASES_DEFAULT_PORT
+- SECRET_KEY
+
+## Optional Settings
+
+- EMAIL_SETTINGS_PASSWORD
+- EMAIL_SETTINGS_USER
+- SLACK_SETTINGS_APIKEY
+- TWILIO_SETTINGS_PHONE_NUMBER
+- TWILIO_SETTINGS_SID
+- TWILIO_SETTINGS_SMS_NUMBER
+- TWILIO_SETTINGS_TOKEN
+- TWILIO_SETTINGS_TWIM_URL
+- XMPP_SETTINGS_PASSWORD
+- XMPP_SETTINGS_PORT
+- XMPP_SETTINGS_SERVER
+- XMPP_SETTINGS_USER
+
+These configuration values are set in `.env` and `docker-compose.yml`
+and you should definitely review both files.  For instance, the
+default MySQL root password is set to `terriblepassword`, and you have
+the power to change that to something unique to your installation.
+
+## Local development with docker-compose
+
+First time database configuration:
+
+```
+docker-compose up -d mysql
+docker-compose run openduty ./manage.py migrate
+docker-compose run openduty ./manage.py createsuperuser
+```
+
+Service start up:
+
+```
+docker-compose up
+```
+
+This working directory is mounted into the running container when
+using `docker-compose`, so any changes you make will be reflected in
+the running container.
 
 # After you've changed your models please run:
 ```

@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql
+    env_file: .env
+  openduty:
+    build:
+      context: .
+    env_file: .env
+    environment:
+      - BASE_URL=http://127.0.0.1:8000/
+      - DATABASES_DEFAULT_NAME=${MYSQL_DATABASE}
+      - DATABASES_DEFAULT_USER=${MYSQL_USER}
+      - DATABASES_DEFAULT_PASSWORD=${MYSQL_PASSWORD}
+      - DATABASES_DEFAULT_HOST=mysql
+      - DATABASES_DEFAULT_PORT=3306
+      - SECRET_KEY=replaceme
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/usr/src/app
