@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.environ.get("DJANGO_DEBUG", False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -188,6 +188,26 @@ TWILIO_AUTH_TOKEN = TWILIO_SETTINGS.get("token", "disabled")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['SECRET_KEY']
+
+AUTH_LDAP_SERVER_URI = os.environ.get("AUTH_LDAP_SERVER_URI", None)
+AUTH_LDAP_BIND_DN = os.environ.get("AUTH_LDAP_BIND_DN", None)
+AUTH_LDAP_BIND_PASSWORD = os.environ.get("AUTH_LDAP_BIND_PASSWORD", None)
+AUTH_LDAP_START_TLS = os.environ.get("AUTH_LDAP_START_TLS", 'False').upper() == 'TRUE'
+AUTH_LDAP_MIRROR_GROUPS = os.environ.get("AUTH_LDAP_MIRROR_GROUPS", 'False').upper() == 'TRUE'
+AUTH_LDAP_GROUP_BASE = os.environ.get("AUTH_LDAP_GROUP_BASE", None)
+AUTH_LDAP_GROUP_FILTER = os.environ.get("AUTH_LDAP_GROUP_FILTER", None)
+AUTH_LDAP_GROUP_SEARCH = LDAPSearch(AUTH_LDAP_GROUP_BASE, ldap.SCOPE_SUBTREE, AUTH_LDAP_GROUP_FILTER)
+AUTH_LDAP_USER_BASE = os.environ.get("AUTH_LDAP_USER_BASE", None)
+AUTH_LDAP_USER_FILTER = os.environ.get("AUTH_LDAP_USER_FILTER", None)
+AUTH_LDAP_USER_SEARCH = LDAPSearch(AUTH_LDAP_USER_BASE, ldap.SCOPE_SUBTREE, AUTH_LDAP_USER_FILTER)
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+if AUTH_LDAP_SERVER_URI:
+    AUTHENTICATION_BACKENDS.insert(0, 'django_auth_ldap.backend.LDAPBackend')
+    MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES + ('openduty.middleware.basicauthmiddleware.BasicAuthMiddleware',)
 
 import sys
 if 'test' in sys.argv:

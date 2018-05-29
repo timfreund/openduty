@@ -9,6 +9,7 @@ services:
       context: .
     env_file: .env
     environment:
+      - DJANGO_DEBUG=True
       - BASE_URL=http://127.0.0.1:8000/
       - DATABASES_DEFAULT_NAME=${MYSQL_DATABASE}
       - DATABASES_DEFAULT_USER=${MYSQL_USER}
@@ -16,7 +17,19 @@ services:
       - DATABASES_DEFAULT_HOST=mysql
       - DATABASES_DEFAULT_PORT=3306
       - SECRET_KEY=replaceme
+      # - AUTH_LDAP_SERVER_URI=ldaps://yourldapserver.example.org
+      # - AUTH_LDAP_BIND_DN=CN=openduty,OU=ServiceAccounts,DC=example,DC=org
+      # - AUTH_LDAP_BIND_PASSWORD=thisisapassword
+      # - AUTH_LDAP_START_TLS=False
+      # - AUTH_LDAP_MIRROR_GROUPS=False
+      # - AUTH_LDAP_GROUP_BASE=AUTH_LDAP_GROUP_BASE
+      # - AUTH_LDAP_GROUP_FILTER=AUTH_LDAP_GROUP_FILTER
+      # - AUTH_LDAP_USER_BASE=OU=users,DC=example,DC=org
+      # - AUTH_LDAP_USER_FILTER=(&(objectClass=user)(sAMAccountName=%(user)s))
     ports:
       - 8000:8000
     volumes:
       - .:/usr/src/app
+      # If you're using an internal LDAP server with an internal SSL cert,
+      # you may need something like this:
+      - /etc/ssl/certs:/etc/ssl/certs
