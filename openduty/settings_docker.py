@@ -136,17 +136,23 @@ AUTH_PROFILE_MODULE = 'openduty.UserProfile'
 
 BASE_URL = os.environ['BASE_URL']
 
-if os.environ.has_key('XMPP_SETTINGS_USER'):
-    XMPP_SETTINGS = {
-        'user': os.environ['XMPP_SETTINGS_USER'],
-        'password': os.environ['XMPP_SETTINGS_PASSWORD'],
-        'server': os.environ['XMPP_SETTINGS_SERVER'],
-        'port': int(os.environ['XMPP_SETTINGS_PORT'])
-    }
+# External Service Settings (Start)
 
 EMAIL_SETTINGS = {
    'user': os.environ.get('EMAIL_SETTINGS_USER'),
    'password': os.environ.get('EMAIL_SETTINGS_PASSWORD')
+}
+
+HIPCHAT_SETTINGS = {
+
+}
+
+PROWL_SETTINGS = {
+
+}
+
+SLACK_SETTINGS = {
+    'apikey': os.environ.get('SLACK_SETTINGS_APIKEY')
 }
 
 TWILIO_SETTINGS = {
@@ -157,12 +163,16 @@ TWILIO_SETTINGS = {
     'twiml_url': os.environ.get('TWILIO_SETTINGS_TWIM_URL')
 }
 
-SLACK_SETTINGS = {
-    'apikey': os.environ.get('SLACK_SETTINGS_APIKEY')
-}
+if os.environ.has_key('XMPP_SETTINGS_USER'):
+    XMPP_SETTINGS = {
+        'user': os.environ['XMPP_SETTINGS_USER'],
+        'password': os.environ['XMPP_SETTINGS_PASSWORD'],
+        'server': os.environ['XMPP_SETTINGS_SERVER'],
+        'port': int(os.environ['XMPP_SETTINGS_PORT'])
+    }
 
-PROWL_SETTINGS = {
-}
+
+# External Service Settings (End)
 
 CACHES = {
     'default': {

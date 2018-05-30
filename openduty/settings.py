@@ -137,6 +137,8 @@ AUTH_PROFILE_MODULE = 'openduty.UserProfile'
 
 BASE_URL = ""
 
+# External Service Settings (Start)
+
 XMPP_SETTINGS = {
 }
 
@@ -148,20 +150,24 @@ EMAIL_SETTINGS = {
     'tls': False
 }
 
+HIPCHAT_SETTINGS = {
+    'token' : '',
+    'endpoint' : ''
+}
+
+PROWL_SETTINGS = {
+
+}
+
 TWILIO_SETTINGS = {
 }
 
 SLACK_SETTINGS = {
 }
 
-PROWL_SETTINGS = {
-}
 
-HIPCHAT_SETTINGS = {
-    'token' : '',
-    'endpoint' : ''
-}
 
+# External Service Settings (End)
 
 CACHES = {
     'default': {
